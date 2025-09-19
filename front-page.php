@@ -10,22 +10,59 @@ get_header(); ?>
 
     <?php get_template_part('template-parts/content', 'hero'); ?>
 
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-image">
-                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/img/section--2-atl-crane-trucks.png?height=400&width=600" alt="ATL Crane Trucks in action">
-                </div>
-                <div class="about-text">
-                    <div class="section-badge">WELCOME TO</div>
-                    <h2 class="section-title">ATL Crane Trucks</h2>
-                    <p>At ATL Crane Trucks, we've been proudly serving the Melbourne metropolitan area and regional Victoria for over 30 years. We're not just another crane service – we're a family-owned and operated business, and that's what sets us apart. Our dedicated team, combined with our modern fleet of crane trucks, is committed to delivering fast, reliable, and personalised crane services that cater to your unique needs.</p>
-                    <a href="#contact" class="btn-primary">CONTACT</a>
+    <?php
+    $about_fields = get_field('about_fields');
+    ?>
+
+    <?php if ($about_fields) : ?>
+        <section id="about" class="about">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-image">
+                        <?php if (!empty($about_fields['section_image'])) : ?>
+                            <?php
+                            // $about_fields['section_image'] will return an array if field type = Image
+                            $image = $about_fields['section_image'];
+                            $image_url = is_array($image) ? $image['url'] : $image;
+                            $image_alt = is_array($image) && !empty($image['alt']) ? $image['alt'] : 'About section image';
+                            ?>
+                            <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($image_alt); ?>">
+                        <?php else : ?>
+                            <img src="<?php echo esc_url(get_stylesheet_directory_uri()); ?>/assets/img/section--2-atl-crane-trucks.png" alt="ATL Crane Trucks in action">
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="about-text">
+                        <?php if (!empty($about_fields['badge'])) : ?>
+                            <div class="section-badge">
+                                <?php echo esc_html($about_fields['badge']); ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($about_fields['header'])) : ?>
+                            <h2 class="section-title">
+                                <?php echo esc_html($about_fields['header']); ?>
+                            </h2>
+                        <?php endif; ?>
+
+                        <?php if (!empty($about_fields['content'])) : ?>
+                            <p>
+                                <?php echo wp_kses_post($about_fields['content']); ?>
+                            </p>
+                        <?php endif; ?>
+
+                        <?php if (!empty($about_fields['cta_link']) && !empty($about_fields['cta_button'])) : ?>
+                            <a href="<?php echo esc_url($about_fields['cta_link']); ?>" class="btn-primary">
+                                <?php echo esc_html($about_fields['cta_button']); ?>
+                            </a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    <?php endif; ?>
+
+
 
     <!-- Services Section -->
     <section id="services" class="services">
@@ -63,9 +100,7 @@ get_header(); ?>
 
     <!-- Why Choose Us Section -->
     <section class="why-choose">
-        <!-- <div class="why-choose-background">
-            <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/img/placeholder.svg?height=600&width=1200" alt="Construction site background">
-        </div> -->
+       
         <div class="container">
             <div class="why-choose-content">
                 <div class="section-badge">REASONS</div>

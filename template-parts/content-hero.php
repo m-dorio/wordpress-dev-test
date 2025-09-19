@@ -188,16 +188,14 @@ if (!empty($gallery_images) && is_array($gallery_images)) {
     }
 
     .hero-content-carousel {
-
-        z-index: 2;
         color: white;
-        height: 100%;
         display: flex;
         justify-content: start;
         align-items: center;
         max-width: 1536px;
         margin: 0 auto;
         padding: 0 20px;
+        height: 100%;
     }
 
     .hero-content-carousel .carousel-container {
@@ -214,11 +212,6 @@ if (!empty($gallery_images) && is_array($gallery_images)) {
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
 
-
-    /* .hero-content-carousel .carousel-container .banner-carousel-image {
-        border-radius: 10px;
-
-    } */
 
     .hero-content-carousel .banner-carousel-image img {
         object-fit: cover;
@@ -340,6 +333,7 @@ if (!empty($gallery_images) && is_array($gallery_images)) {
         .hero .hero-content-carousel .carousel-content {
             max-width: 50%;
         }
+
     }
 
     @media (max-width: 1199px) {
@@ -383,23 +377,13 @@ if (!empty($gallery_images) && is_array($gallery_images)) {
             background: #214CA1;
         }
 
-        /* .hero {
-            min-height: 400px;
-            background: linear-gradient(141deg,
-                    #214CA1 0%,
-                    #214CA1 40%,
-                    #ffffff 40%,
-                    #ffffff 80%,
-                    #f47a20 80%,
-                    #f47a20 100%);
-        } */
-
         .hero-content-carousel .carousel-container {
             height: 100%;
         }
 
         .hero-content {
             top: 50px;
+            height: 700px;
         }
 
         .hero-nav {
@@ -409,7 +393,7 @@ if (!empty($gallery_images) && is_array($gallery_images)) {
             gap: 50px;
             align-items: center;
             position: absolute;
-            bottom: 14%;
+            bottom: 5%;
             right: 0;
             transform: translateY(0);
             z-index: 2;
