@@ -1,112 +1,111 @@
 <?php
-// Headline with proper fallback
-$headline = 'Your Trusted Family-Owned Crane Service';
-if (function_exists('get_field') && ($acf_headline = get_field('hero_heading')) && !empty($acf_headline)) {
-    $headline = $acf_headline;
-}
+// Prepare carousel slides array from CTA groups
+$carousel_slides = [];
 
-// Subheading
-$sub = 'Melbourne & Regional Victoria';
-if (function_exists('get_field') && ($acf_sub = get_field('hero_subheading')) && !empty($acf_sub)) {
-    $sub = $acf_sub;
-}
-
-// CTA Text
-$cta_text = 'Get Quote';
-if (function_exists('get_field') && ($acf_cta = get_field('hero_cta_text')) && !empty($acf_cta)) {
-    $cta_text = $acf_cta;
-}
-
-// CTA URL
-$cta_url = '/contact';
-if (function_exists('get_field') && ($acf_url = get_field('hero_cta_link')) && !empty($acf_url)) {
-    $cta_url = $acf_url;
-}
-
-// Image (special handling)
-$image = get_stylesheet_directory_uri() . '/assets/img/hero-bg.jpg';
-if (function_exists('get_field')) {
-    $acf_image = get_field('hero_image');
-    if (is_array($acf_image) && !empty($acf_image['url'])) {
-        $image = $acf_image['url'];
-    } elseif (is_string($acf_image) && !empty($acf_image)) {
-        $image = $acf_image;
-    }
-}
-?>
-
-<!-- Hero Section -->
-<?php
-// Get all carousel slides
-$carousel_slides = array();
 for ($i = 1; $i <= 3; $i++) {
-    $image = get_field('cta' . $i . '_image');
-    $badge = get_field('cta' . $i . '_badge');
-    $text = get_field('cta' . $i . '_text');
-    $sub = get_field('cta' . $i . '_sub');
-    $url = get_field('cta' . $i . '_url');
-    $btn = get_field('cta' . $i . '_btn') ?: 'Contact';
+    $cta = get_field('cta_block_' . $i); // Get group field
+
+    if (!$cta) continue;
+
+    $image = $cta['image'] ?? '';
+    $text = $cta['text'] ?? '';
+    $sub = $cta['sub'] ?? '';
+    $url = $cta['url'] ?? '';
+    $btn = $cta['btn'] ?? 'Contact';
+    $badge = $cta['badge'] ?? '';
 
     if ($image || $text) {
-        $carousel_slides[] = array(
-            'image' => $image,
+        // Handle image object or URL
+        if (is_array($image)) {
+            $image_url = $image['url'] ?? '';
+            $alt_text = $image['alt'] ?? ($text ?: 'Carousel image');
+        } else {
+            $image_url = $image;
+            $alt_text = $text ?: 'Carousel image';
+        }
+
+        $carousel_slides[] = [
+            'image' => $image_url,
+            'alt' => $alt_text,
             'badge' => $badge,
             'text' => $text,
             'sub' => $sub,
             'url' => $url,
             'btn' => $btn
-        );
+        ];
     }
 }
 
-if (!empty($carousel_slides)): ?>
+// Load additional gallery images (unchanged)
+$gallery_images = get_field('banner_carousel_images');
+if (!empty($gallery_images) && is_array($gallery_images)) {
+    foreach ($gallery_images as $gallery_image) {
+        if (is_array($gallery_image)) {
+            $image_url = $gallery_image['url'] ?? '';
+            $alt_text = $gallery_image['alt'] ?? 'Carousel image';
+        } else {
+            $image_url = wp_get_attachment_url($gallery_image);
+            $alt_text = get_post_meta($gallery_image, '_wp_attachment_image_alt', true) ?: 'Carousel image';
+        }
+
+        if ($image_url) {
+            $carousel_slides[] = [
+                'image' => $image_url,
+                'alt' => $alt_text,
+                'badge' => '',
+                'text' => '',
+                'sub' => '',
+                'url' => '',
+                'btn' => ''
+            ];
+        }
+    }
+}
+?>
+
+
+
+<?php if (!empty($carousel_slides)): ?>
     <section id="home" class="hero">
         <div class="hero-content">
             <?php foreach ($carousel_slides as $index => $slide): ?>
                 <div class="slide fade <?php echo $index === 0 ? 'active' : ''; ?>" data-slide="<?php echo $index; ?>">
-
                     <div class="hero-content-carousel">
                         <div class="carousel-content">
-                            <?php if ($slide['badge']): ?>
+                            <?php if (!empty($slide['badge'])): ?>
                                 <div class="hero-badge"><?php echo esc_html($slide['badge']); ?></div>
                             <?php endif; ?>
 
-
-                            <?php if ($slide['sub']): ?>
+                            <?php if (!empty($slide['sub'])): ?>
                                 <p><?php echo esc_html($slide['sub']); ?></p>
                             <?php endif; ?>
 
-                            <?php if ($slide['text']): ?>
+                            <?php if (!empty($slide['text'])): ?>
                                 <h1><?php echo esc_html($slide['text']); ?></h1>
                             <?php endif; ?>
 
-
-                            <?php if ($slide['url']): ?>
+                            <?php if (!empty($slide['url'])): ?>
                                 <a href="<?php echo esc_url($slide['url']); ?>" class="btn btn-primary">
                                     <?php echo esc_html($slide['btn']); ?>
                                 </a>
                             <?php endif; ?>
-                            <!-- <?php if ($slide['image']): ?>
-                            <div class="hero-background">
-                                <img src="<?php echo esc_url($slide['image']); ?>" alt="<?php echo esc_attr($slide['text'] ?: 'Carousel slide'); ?>">
+                        </div>
+
+                        <div class="carousel-container">
+                            <div class="banner-carousel-image">
+                                <?php if (!empty($slide['image'])): ?>
+                                    <img src="<?php echo esc_url($slide['image']); ?>" alt="<?php echo esc_attr($slide['text'] ?: 'Carousel image'); ?>">
+                                <?php endif; ?>
                             </div>
-
-                        <?php endif; ?> -->
                         </div>
-                        <div class="banner-carousel-image">
-                            <img src="/placeholder.svg?height=400&amp;width=600" alt="Banner Image">
-                        </div>
-
                     </div>
-
-
                 </div>
             <?php endforeach; ?>
 
             <?php if (count($carousel_slides) > 1): ?>
                 <div class="hero-nav">
-                    <button class="hero-nav-btn prev" id="hero-prev" aria-label="Previous slide"><i class="fa-solid fa-arrow-left"></i></button>
-                    <button class="hero-nav-btn next" id="hero-next" aria-label="Next slide"><i class="fa-solid fa-arrow-right"></i></button>
+                    <button class="hero-nav-btn prev" id="hero-prev" aria-label="Previous slide"><i class="fa-solid fa-left-long"></i></button>
+                    <button class="hero-nav-btn next" id="hero-next" aria-label="Next slide"><i class="fa-solid fa-right-long"></i></button>
                 </div>
 
                 <div class="hero-indicators" id="hero-indicators">
@@ -121,23 +120,27 @@ if (!empty($carousel_slides)): ?>
     </section>
 <?php endif; ?>
 
+
+
 <style>
     /* Hero Carousel Styles */
     .hero {
-        position: relative;
         height: 900px;
+        /* Full viewport height */
         min-height: 600px;
         overflow: hidden;
-        max-width: 1920px;
-        margin: 0 auto;
-        background:
-            linear-gradient(141deg, #214CA1 0%,
+        background: linear-gradient(141deg,
+                #214CA1 0%,
                 #214CA1 50%,
                 #ffffff 50%,
-                #ffffff 90%,
-                #ff6b35 16%,
-                #ff6b35 10%)
+                #ffffff 85%,
+                #f47a20 85%,
+                #f47a20 100%);
+        background-size: cover;
+        background-position: center;
     }
+
+
 
     .slide {
         position: absolute;
@@ -165,50 +168,75 @@ if (!empty($carousel_slides)): ?>
         width: 100%;
         height: 100%;
         object-fit: cover;
+
     }
 
     .hero-content {
+        /* margin-top: 20px; */
         position: relative;
         z-index: 2;
         color: white;
         text-align: center;
         padding: 0 20px;
-        max-width: 1280px;
-        margin: 0 auto;
+        margin-left: auto;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: start;
+        max-width: 100%;
     }
 
     .hero-content-carousel {
-        position: relative;
+
         z-index: 2;
         color: white;
-        padding: 0 20px;
         height: 100%;
         display: flex;
-        justify-content: center;
+        justify-content: start;
         align-items: center;
+        max-width: 1536px;
+        margin: 0 auto;
+        padding: 0 20px;
     }
 
-    .hero-content-carousel .banner-carousel-image {
-        flex: 1;
+    .hero-content-carousel .carousel-container {
         display: flex;
-        justify-content: center;
+        justify-content: end;
         align-items: center;
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 680px;
+        overflow: hidden;
+        /* max-width: 1360px; */
+        max-width: calc(100% - 545px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+
+    /* .hero-content-carousel .carousel-container .banner-carousel-image {
+        border-radius: 10px;
+
+    } */
+
+    .hero-content-carousel .banner-carousel-image img {
+        object-fit: cover;
+        overflow: hidden;
+
     }
 
     .hero-content-carousel .carousel-content {
         z-index: 2;
         color: white;
         padding: 0 20px;
-        max-width: 660px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: start;
+        gap: 15px;
+        align-items: flex-start;
+        width: 100%;
+        box-sizing: border-box;
     }
 
 
@@ -221,7 +249,7 @@ if (!empty($carousel_slides)): ?>
         background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(10px);
         padding: 8px 20px;
-        border-radius: 25px;
+        border-radius: 10px;
         font-size: 0.9rem;
         font-weight: 600;
         margin-bottom: 20px;
@@ -246,14 +274,22 @@ if (!empty($carousel_slides)): ?>
     }
 
     /* Navigation buttons */
+
     .hero-nav {
+        position: absolute;
+        bottom: -15%;
+        right: 10%;
+        transform: translateY(-50%);
+        z-index: 2;
+    }
+
+    /* .hero-nav {
         position: absolute;
         bottom: 0%;
         right: 20px;
         transform: translateY(-50%);
-        background: rgba(255, 255, 255, 0.2);
         z-index: 2;
-    }
+    } */
 
     .hero-nav-btn {
         border: none;
@@ -261,9 +297,9 @@ if (!empty($carousel_slides)): ?>
         font-size: 2rem;
         padding: 15px;
         cursor: pointer;
+        background: transparent;
         z-index: 3;
         transition: background 0.3s ease;
-        backdrop-filter: blur(5px);
     }
 
     .hero-nav-btn:hover {
@@ -277,7 +313,7 @@ if (!empty($carousel_slides)): ?>
     /* Indicators */
     .hero-indicators {
         position: absolute;
-        bottom: 30px;
+        bottom: 50px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
@@ -299,26 +335,86 @@ if (!empty($carousel_slides)): ?>
         background: #ff6600;
     }
 
+
+    @media (min-width: 1200px) {
+        .hero .hero-content-carousel .carousel-content {
+            max-width: 50%;
+        }
+    }
+
+    @media (max-width: 1199px) {
+
+        .hero-content-carousel .carousel-container,
+        .hero-content-carousel .carousel-content {
+            max-width: 100%;
+        }
+
+        .hero-content-carousel .carousel-container {
+            top: 50px;
+        }
+
+        .hero-content-carousel .banner-carousel-image img {
+            object-fit: cover;
+            overflow: hidden;
+            filter: brightness(0.5);
+        }
+
+        .hero-nav {
+            bottom: -10%;
+            right: 0%;
+        }
+    }
+
+
     /* Responsive */
     @media (max-width: 768px) {
-
-        .hero-content-carousel p {
-            font-size: 1.1rem;
-        }
 
         .hero-nav-btn {
             padding: 10px;
             font-size: 1.5rem;
         }
 
-        .hero-content-carousel {
-            display: flex;
-            flex-direction: column-reverse;
+        .hero,
+        .hero-content-carousel .carousel-container {
+            padding: 30px 0;
         }
 
-        .hero-content-carousel .banner-carousel-image{
+        .hero {
+            background: #214CA1;
+        }
+
+        /* .hero {
+            min-height: 400px;
+            background: linear-gradient(141deg,
+                    #214CA1 0%,
+                    #214CA1 40%,
+                    #ffffff 40%,
+                    #ffffff 80%,
+                    #f47a20 80%,
+                    #f47a20 100%);
+        } */
+
+        .hero-content-carousel .carousel-container {
             height: 100%;
         }
+
+        .hero-content {
+            top: 50px;
+        }
+
+        .hero-nav {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 50px;
+            align-items: center;
+            position: absolute;
+            bottom: 14%;
+            right: 0;
+            transform: translateY(0);
+            z-index: 2;
+        }
+
     }
 </style>
 
@@ -362,7 +458,7 @@ if (!empty($carousel_slides)): ?>
 
         // Auto-rotate slides
         function startSlider() {
-            slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+            slideInterval = setInterval(nextSlide, 9000); // Change slide every 5 seconds
         }
 
         function stopSlider() {

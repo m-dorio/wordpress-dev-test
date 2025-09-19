@@ -29,6 +29,19 @@ function ttf_child_setup()
     
 }
 
+// Enable custom logo support
+function theme_setup()
+{
+    add_theme_support('custom-logo', array(
+        'height'      => 50,   // You can change the height as needed
+        'width'       => 120,  // You can change the width as needed
+        'flex-height' => true, // Allow logo height flexibility
+        'flex-width'  => true, // Allow logo width flexibility
+    ));
+}
+add_action('after_setup_theme', 'theme_setup');
+
+
 // Include ACF field group registration (if ACF is active)
 if (file_exists(get_stylesheet_directory() . '/inc/acf-fields.php')) {
     require get_stylesheet_directory() . '/inc/acf-fields.php';

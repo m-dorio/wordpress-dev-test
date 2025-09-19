@@ -16,23 +16,37 @@
             </div>
             <div class="footer-section">
                 <div class="footer-logo">
-                    <img src="/placeholder.svg?height=60&width=140" alt="ATL Crane Trucks">
+                    <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/img//section--7-footer-logo.png?height=60&width=140" alt="ATL Crane Trucks">
                 </div>
                 <div class="social-links">
-                    <a href="#" class="social-link">📘</a>
-                    <a href="#" class="social-link">📧</a>
-                    <a href="#" class="social-link">📞</a>
+                    <a href="#" class="social-link"><i class="fa-brands fa-facebook-f" style="color: #fff;"></i></a>
+                    <a href="#" class="social-link"><i class="fa-brands fa-twitter" style="color: #fff;"></i></a>
+                    <a href="#" class="social-link"><i class="fa-brands fa-instagram" style="color: #fff;"></i></a>
                 </div>
             </div>
             <div class="footer-section">
-                <h3>Contact</h3>
-                <p>Adrian Larkin</p>
-                <p>📞 0402 268 122</p>
-                <p>✉️ atlcranetrucks@gmail.com</p>
+                <div class="contact-custom-details">
+                    <h3>Contact</h3>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <strong>Adrian Larkin</strong>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon"><i class="fa-solid fa-phone" style="color: #f47a20;"></i></span>
+                            <a href="tel:+0402268122"> <span>0402 268 122</span></a>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon"><i class="fa-solid fa-envelope" style="color: #f47a20;"></i></span>
+                            <a href="mailto:atlcranetrucks@gmail.com"><span>atlcranetrucks@gmail.com</span></a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>Copyright © 2023 ATL Crane Trucks. All Rights Reserved. | Web Design by <a href="#">Balanced Designs</a></p>
+            <div>
+                <p>Copyright © 2023 ATL Crane Trucks. All Rights Reserved. | Web Design by <a href="#">Netwizard Design</a></p>
+            </div>
         </div>
     </div>
 </footer>
@@ -63,12 +77,12 @@
         const header = document.querySelector('.header');
         const nav_menu = document.querySelectorAll('.header [id^="menu-item-"] a');
         const contact_nav_menu = document.querySelector('#nav_contact a');
-        if (window.scrollY > 100) {
-            header.style.background = 'rgba(255, 255, 255, 0.98)';
+        if (window.scrollY > 10) {
+            header.style.background = '#214CA1';
             header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
 
             nav_menu.forEach(link => {
-                link.style.color = '#000'; // Change color on scroll
+                link.style.color = '#FFF'; // Change color on scroll
             });
 
 

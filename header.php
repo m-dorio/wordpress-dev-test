@@ -19,22 +19,26 @@ $cta_url = function_exists('get_field') ? get_field('hero_cta_link') : '/contact
 ?>
 
 <body <?php body_class(); ?>>
-  <!-- <a class="skip-link" href="#main-content"><?php esc_html_e('Skip to content', 'textdomain'); ?></a> -->
 
   <!-- Header -->
   <header class="header">
     <nav class="nav">
       <div class="nav-container">
         <div class="nav-logo">
-          <img src="/placeholder.svg?height=50&width=120" alt="ATL Crane Trucks">
+          <?php
+          // Check if a custom logo exists in WordPress customizer
+          if (has_custom_logo()) {
+            // Display the custom logo
+            the_custom_logo();
+          } else {
+            // If no custom logo, use a fallback image from the child theme
+          ?>
+            <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/img/section--1-navlogo.png?height=50&width=120" alt="ATL Crane Trucks">
+          <?php
+          }
+          ?>
         </div>
-        <!-- <ul class="nav-menu" id="nav-menu">
-          <li><a href="#home" class="nav-link">HOME</a></li>
-          <li><a href="#about" class="nav-link">WHY ATL</a></li>
-          <li><a href="#services" class="nav-link">SERVICES</a></li>
-          <li><a href="#projects" class="nav-link">PROJECTS</a></li>
-          <li><a href="#blog" class="nav-link">BLOG</a></li>
-        </ul> -->
+
         <?php
         wp_nav_menu([
           'theme_location' => 'primary',
@@ -53,30 +57,3 @@ $cta_url = function_exists('get_field') ? get_field('hero_cta_link') : '/contact
       </div>
     </nav>
   </header>
-  <!-- <header class="header">
-    <nav class="nav">
-      <div class="nav-container">
-        <div class="nav-logo">
-          <?php
-          if (has_custom_logo()) {
-            the_custom_logo();
-          } else {
-            bloginfo('name');
-          }
-          ?>
-        </div>
-        <?php
-        wp_nav_menu([
-          'theme_location' => 'primary',
-          'container'      => false,
-          'menu_class'     => 'nav-menu',
-          'fallback_cb'    => false,
-        ]);
-        ?>
-        <a href="#contact" class="nav-cta">CONTACT</a>
-        <div class="nav-toggle" id="nav-toggle">
-          <span></span><span></span><span></span>
-        </div>
-      </div>
-    </nav>
-  </header> -->
