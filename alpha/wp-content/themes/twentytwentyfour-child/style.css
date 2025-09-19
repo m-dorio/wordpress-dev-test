@@ -1,0 +1,149 @@
+/*
+Theme Name: Twenty Twenty-Four Child
+Theme URI: https://your.site/
+Description: Child theme — pixel faithful demo. Based on Twenty Twenty-Four.
+Author: Your Name
+Template: twentytwentyfour
+Version: 1.0.0
+Text Domain: twentytwentyfour-child
+*/
+
+
+/* Reset and Base Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    color: #333;
+    background-color: #fff;
+    overflow-x: hidden;
+    font-family: "Roboto", sans-serif;
+    line-height: 0;
+}
+
+main {
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+section,
+footer {
+    padding: 100px 0;
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-right: auto;
+    margin-left: auto;
+}
+
+h1 {
+    font-size: clamp(30px, 5vw + 1rem, 60px);
+    font-family: "Montserrat", sans-serif;
+    line-height: clamp(50px, 6vw, 60px);
+    font-style: normal;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+h2 {
+    font-size: clamp(25px, 4vw, 40px);
+    font-family: "Montserrat", sans-serif;
+    line-height: clamp(35px, 5vw, 45px);
+    font-style: normal;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+h3 {
+    font-size: clamp(20px, 4vw, 22px);
+    font-family: "Montserrat", sans-serif;
+    line-height: clamp(30px, 4vw, 40px);
+    font-style: normal;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+h4 {
+    font-size: 22px;
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 0;
+}
+
+h5 {
+    font-family: "Montserrat", sans-serif;
+    font-size: clamp(1.25rem, 1.1703rem + 0.3268vw, 1.5625rem);
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-bottom: 0;
+}
+
+p {
+    font-family: "Roboto", sans-serif;
+    line-height: normal;
+}
+
+.icon {
+    color: #FF6600;
+    font-size: 2rem;
+}
+
+
+/* Responsive Design */
+
+@media screen and (max-width: 1199px) {
+    section,
+    footer {
+        padding: 70px 30px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    section,
+    footer {
+        padding: 50px 30px;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    section,
+    footer {
+        padding: 30px 20px;
+    }
+}
+
+
+/* Smooth Scrolling */
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+/* Loading Animation */
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
